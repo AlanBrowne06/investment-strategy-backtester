@@ -1,7 +1,7 @@
 import numpy as np
 import yfinance as yf
 
-tickers = [
+tickers = [ #Sample taken from the the top 100 stocks in the S&P500 over the time period.
 "AAPL","MSFT","AMZN","GOOGL","GOOG","META","TSLA","NVDA","BRK-B",
 "JPM","JNJ","PG","V","MA","UNH","HD","DIS","BAC","XOM","CVX",
 "WMT","KO","PEP","MRK","ABBV","PFE","ORCL","CRM","NFLX","ADBE",
@@ -15,7 +15,7 @@ tickers = [
 "SBUX","SCHW","COP","T","MDT","ZTS","PGR","CMCSA","ITW","FIS"
 ]
 
-data = yf.download(
+data = yf.download( #yfi
     tickers,
     start="2021-01-01",
     end="2026-01-01",
