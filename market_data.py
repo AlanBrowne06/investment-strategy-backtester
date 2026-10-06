@@ -1,7 +1,7 @@
-import numpy as np
 import yfinance as yf
 
-tickers = [ #Sample taken from the the top 100 stocks in the S&P500 over the time period.
+# Large-cap US stock universe, primarily consisting of S&P 500 companies.
+tickers = [
 "AAPL","MSFT","AMZN","GOOGL","GOOG","META","TSLA","NVDA","BRK-B",
 "JPM","JNJ","PG","V","MA","UNH","HD","DIS","BAC","XOM","CVX",
 "WMT","KO","PEP","MRK","ABBV","PFE","ORCL","CRM","NFLX","ADBE",
@@ -15,7 +15,8 @@ tickers = [ #Sample taken from the the top 100 stocks in the S&P500 over the tim
 "SBUX","SCHW","COP","T","MDT","ZTS","PGR","CMCSA","ITW","FIS"
 ]
 
-data = yf.download( #yfi
+# Download stock price data
+data = yf.download(
     tickers,
     start="2021-01-01",
     end="2026-01-01",
@@ -23,17 +24,20 @@ data = yf.download( #yfi
     progress=False
 )
 close = data["Close"].dropna(axis=1, how="all")
-starting_values = close.iloc[0]
-ending_values = close.iloc[-1]
-SP = yf.download("SPY",
+weekly = close.resample("W-FRI").last()
+weekly_returns = weekly.pct_change(fill_method=None)
+
+
+
+# Download SPY data for use as the benchmark
+spy_data = yf.download("SPY",
     start="2021-01-01",
     end="2026-01-01",
     auto_adjust=True,
-    progress=False)
-spy_close = SP["Close"].dropna(axis=1,how="all")
-spy_weekly = spy_close.resample("W-FRI").last()
-spy_value = (spy_weekly / spy_weekly.shift(1)).dropna().cumprod()
-spy_value = np.insert(spy_value.to_numpy().flatten(),0,1)
+    progress=False
+)
 
-weekly = close.resample("W-FRI").last()
-weekly_returns = weekly.pct_change()
+spy_close = spy_data["Close"].dropna(axis=1,how="all")
+spy_weekly = spy_close.resample("W-FRI").last()
+spy_returns = spy_weekly.pct_change()
+
